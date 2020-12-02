@@ -89,9 +89,9 @@ class System extends Component {
 		const val = target.checked || target.value;
 		this.setState((state) => {
 			if(n.includes("privacy")) {
-				state.edit.vals[n] = val == true ? "private" : "public";
+				state.edit.vals[n] = val === true ? "private" : "public";
 			} else {
-				state.edit.vals[n] = val != "" ? val : null;
+				state.edit.vals[n] = val !== "" ? val : null;
 			}
 			
 			return state;
@@ -211,19 +211,19 @@ class System extends Component {
 						<div id="privacy-panel">
 							<p>
 								<label for="description_privacy">Make description private?</label>{" "}
-								<input type="checkbox" name="description_privacy" checked={edit.vals.description_privacy == "private" ? true : false} onChange={(e)=>this.handleChange("description_privacy",e)}/>
+								<input type="checkbox" name="description_privacy" checked={edit.vals.description_privacy === "private" ? true : false} onChange={(e)=>this.handleChange("description_privacy",e)}/>
 							</p>
 							<p>
 								<label for="member_list_privacy">Make member list private?</label>{" "}
-								<input type="checkbox" name="member_list_privacy" checked={edit.vals.member_list_privacy == "private" ? true : false} onChange={(e)=>this.handleChange("member_list_privacy",e)}/>
+								<input type="checkbox" name="member_list_privacy" checked={edit.vals.member_list_privacy === "private" ? true : false} onChange={(e)=>this.handleChange("member_list_privacy",e)}/>
 							</p>
 							<p>
 								<label for="front_privacy">Make current fronters private?</label>{" "}
-								<input type="checkbox" name="front_privacy" checked={edit.vals.front_privacy == "private" ? true : false} onChange={(e)=>this.handleChange("front_privacy",e)}/>
+								<input type="checkbox" name="front_privacy" checked={edit.vals.front_privacy === "private" ? true : false} onChange={(e)=>this.handleChange("front_privacy",e)}/>
 							</p>
 							<p>
 								<label for="front_history_privacy">Make front history private?</label>{" "}
-								<input type="checkbox" name="front_history_privacy" checked={edit.vals.front_history_privacy == "private" ? true : false} onChange={(e)=>this.handleChange("front_history_privacy",e)}/>
+								<input type="checkbox" name="front_history_privacy" checked={edit.vals.front_history_privacy === "private" ? true : false} onChange={(e)=>this.handleChange("front_history_privacy",e)}/>
 							</p>
 							<Dropdown list = {privacyVals} callback = {this.setMemberPrivacy} />
 						</div>
@@ -250,7 +250,7 @@ class System extends Component {
 							<p><strong>{sys.name || "(no name)"} ({sys.id})</strong></p>
 							{sys.tag && <p><strong>Tag:</strong> {sys.tag}</p>}
 							<p><strong>Member count:</strong> {membs && membs[0] ? membs.length : (membs.private ? "(private)" : 0)}</p>
-							<p><strong>Current fronter{frnt && frnt.members && frnt.members.length != 1 ? 's' : ''}:</strong> {frnt && frnt.members && frnt.members.length > 0 ? frnt.members.map(m => m.name).join(", ") : (frnt.private ? "This user's fronters are private" : "(none)")}</p>
+							<p><strong>Current fronter{frnt && frnt.members && frnt.members.length !== 1 ? 's' : ''}:</strong> {frnt && frnt.members && frnt.members.length > 0 ? frnt.members.map(m => m.name).join(", ") : (frnt.private ? "This user's fronters are private" : "(none)")}</p>
 							{sys.description && (
 								<Frag>
 								<p>

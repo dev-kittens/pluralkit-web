@@ -34,7 +34,7 @@ app.get('/api/user', async (req,res)=> {
         }
 
         var system = (await axinst('/s', {headers}));
-        if(system.status != 200) return res.status(404).send(undefined);
+        if(system.status !== 200) return res.status(404).send(undefined);
         system = system.data;
 
         try {
@@ -59,18 +59,18 @@ app.get('/api/user', async (req,res)=> {
 
 app.get('/api/user/:id', async (req,res)=> {
     var user = await axinst('/s/'+req.params.id);
-    if(user.status != 200) {
+    if(user.status !== 200) {
         res.status(404).send(undefined)
     } else {
         user = {system: user.data};
 
         var members = await axinst('/s/'+user.system.id+"/members");
-        if(members.status == 403) user.members = {private: true};
+        if(members.status === 403) user.members = {private: true};
         else user.members = members.data.sort(sortfunc);
 
         var fronters = await axinst('/s/'+user.system.id+"/fronters");
-        if(fronters.status == 200) user.fronters = fronters.data;
-        else if(fronters.status == 403) user.fronters = {private: true};
+        if(fronters.status === 200) user.fronters = fronters.data;
+        else if(fronters.status === 403) user.fronters = {private: true};
         else user.fronters = {};
 
         res.status(200).send(user)
@@ -96,7 +96,7 @@ app.post('/api/login', async (req,res)=> {
         system,
         members: members.sort(sortfunc),
         token: req.body.token,
-        fronters: typeof fronters == "object" ? fronters : {}
+        fronters: typeof fronters === "object" ? fronters : {}
     };
     
     res.cookie('token', req.body.token);
@@ -125,8 +125,8 @@ app.delete('/pkapi/*', pkApi("DELETE"));
 
 app.get("/profile/:id", async (req, res)=> {
     var prof = await axinst('/s/'+req.params.id);
-    if(prof.status != 200) {
-        var index = indexPage;
+    if(prof.status !== 200) {
+        let index = indexPage;
         index = index.replace('$TITLE','404 || PluralKit Web');
         index = index.replace('$DESC','System not found');
         index = index.replace('$TWITDESC','System not found');
@@ -138,7 +138,7 @@ app.get("/profile/:id", async (req, res)=> {
     } else {
         prof = prof.data;
         if(!prof.name) prof.name = "(unnamed)";
-        var index = indexPage;
+        let index = indexPage;
         index = index.replace('$TITLE',prof.name+' || PluralKit Web');
         index = index.replace('$DESC','System on PluralKit');
         index = index.replace('$TWITDESC','System on PluralKit');

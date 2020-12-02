@@ -111,10 +111,10 @@ class MemberList extends Component {
 			}
 		});
 
-		if(res.status == 200) {
+		if(res.status === 200) {
 			this.setState((state)=> {
 				state.deleted = true;
-				state.members = state.members.filter(m => m.id != id);
+				state.members = state.members.filter(m => m.id !== id);
 				return state;
 			})
 		} else {
@@ -124,7 +124,7 @@ class MemberList extends Component {
 
 	onEdit = async (member)=> {
 		this.setState(state => {
-			var ind = state.members.findIndex(mb => mb.id == member.id);
+			var ind = state.members.findIndex(mb => mb.id === member.id);
 			state.members[ind] = member;
 			state.members = this.state.sortmethod.func(state.members);
 			return state;
@@ -153,13 +153,13 @@ class MemberList extends Component {
 	            	this.state.members.map((m) => {
 	            		var qmatch = !query || 
 	            					 (m.name.toLowerCase().includes(query.toLowerCase()) || 
-	            					  m.displayname && m.displayname.toLowerCase().includes(query.toLowerCase()));
-	            		var hmatch = hide || m.visibility == "public";
+	            					  (m.displayname && m.displayname.toLowerCase().includes(query.toLowerCase())));
+	            		var hmatch = hide || m.visibility === "public";
 
 	            		if(qmatch && hmatch) return (
 	            			<MemberCard
 	            				key={m.id}
-	            				isNew={(this.state.new == m.id)}
+	            				isNew={(this.state.new === m.id)}
 	            				member={m}
 	            				editable={this.state.editable}
 	            				token={this.state.token}

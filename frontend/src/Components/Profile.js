@@ -14,9 +14,9 @@ class Profile extends Component {
 	async componentDidMount() {
 		if(!this.state.id) return console.log("ID = null");
 		var sys = await fetch('/api/user/'+this.state.id);
-		if(sys.status == 200) {
+		if(sys.status === 200) {
 			this.setState({ user: await sys.json()});
-		} else if(sys.status == 404) {
+		} else if(sys.status === 404) {
 			this.setState({user: "404"})
 		} else {
 			this.setState({user: null})
@@ -24,7 +24,7 @@ class Profile extends Component {
 	}
 
 	render () {
-		if(this.state.user && this.state.user != "404") {
+		if(this.state.user && this.state.user !== "404") {
 			return (
 				<Frag>
 				<h1 style={{textAlign: 'center'}}>System</h1>
@@ -34,7 +34,7 @@ class Profile extends Component {
 				<MemberList members={this.state.user.members} editable={false} token={null} />}
 				</Frag>
 			);
-		} else if(this.state.user == "404") {
+		} else if(this.state.user === "404") {
 			return (
 				<p>System not found.</p>
 			);

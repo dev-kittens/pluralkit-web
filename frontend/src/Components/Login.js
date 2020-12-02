@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import * as fetch from 'node-fetch';
 
 class Login extends Component {
@@ -22,7 +22,7 @@ class Login extends Component {
 			}
 		});
 
-		if(res.status == 200) {
+		if(res.status === 200) {
 			this.setState({submitted: true, user: await res.json()})
 			this.props.history.push('/')
 		} else {
@@ -33,15 +33,25 @@ class Login extends Component {
 	render(){
 		return(
 			<div className="App-login">
-			<p>Enter your token below. You can get this with "pk;token"</p>
-			<p style={{color: "red"}}>{this.state.submitted && !this.state.user ? "Something went wrong, please try again." : ""}</p>
-			<form onSubmit={this.handleSubmit}>
-				<input type="text"
-				floatinglabeltext="Token"
-            	onChange = {(event,newValue) => {this.setState({token:event.target.value})}}
-            	/>
-            	<button type="submit">Submit</button>
-			</form>
+				<p>Enter your token below. You can get this with "pk;token"</p>
+				<p style={{color: "red"}}>{this.state.submitted && !this.state.user ? "Something went wrong, please try again." : ""}</p>
+				<form style={{textAlign: "center"}} onSubmit={this.logIn}>
+					<input type="text"
+					placeholder="token"
+					onChange = {(event,newValue) => {this.setState({token:event.target.value})}}
+					/>
+				<button type="submit" className="App-button">Submit</button>
+				</form>
+
+				<p>Enter your token below. You can get this with "pk;token"</p>
+				<p style={{color: "red"}}>{this.state.submitted && !this.state.user ? "Something went wrong, please try again." : ""}</p>
+				<form onSubmit={this.handleSubmit}>
+					<input type="text"
+					floatinglabeltext="Token"
+					onChange = {(event,newValue) => {this.setState({token:event.target.value})}}
+					/>
+					<button type="submit">Submit</button>
+				</form>
 			</div>
 		);
 	}

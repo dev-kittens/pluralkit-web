@@ -1,4 +1,4 @@
-import React, { Component, Fragment as Frag } from 'react';
+import React, { Component } from 'react';
 
 class Dropdown extends Component {
 	constructor(props) {
@@ -37,12 +37,12 @@ class Dropdown extends Component {
 
 	selectItem = async (e) => {
 		e.preventDefault();
-		if(this.state.type == 1) return;
+		if(this.state.type === 1) return;
 		var lastindex = this.state.index;
 		var target = e.target;
 		var index = [...target.parentNode.children].indexOf(target);
-		if(lastindex == index) return this.setState({visible: false});
-		var item = target.innerHTML ? this.state.list.find(i => i.name == target.innerHTML) : this.state.def;
+		if(lastindex === index) return this.setState({visible: false});
+		var item = target.innerHTML ? this.state.list.find(i => i.name === target.innerHTML) : this.state.def;
 		if(this.state.callback) {
 			var data = await this.state.callback(item, index, lastindex);
 			this.setState(data ? {...data, visible: false} : {selected: item, visible: false, index: index});
@@ -58,8 +58,10 @@ class Dropdown extends Component {
 				<div className="App-dropTitle" onClick={this.toggleVisibility}>{this.state.selected.name}</div>
 				{this.state.visible && (
 					<ul onClick={(e)=> e.stopPropagation()}>
-					{this.state.list.map((v,i)=> {
-						if(!(this.state.type == 1 && i == 0))
+					{
+					// eslint-disable-next-line array-callback-return
+					this.state.list.map((v,i)=> {
+						if(!(this.state.type === 1 && i === 0))
 							return <li className="App-dropitem" key={v+i} onClick={this.selectItem}>{v.name}</li>
 					})}
 					</ul>

@@ -1,10 +1,6 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 
 class Loading extends Component {
-	constructor() {
-		super();
-	}
-
 	render() {
 		return (
 			<div className="App-load">

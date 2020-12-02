@@ -64,15 +64,15 @@ class MemberCard extends Component {
 	formatTime = (date) => {
 		if (!date) return `null`;
 		
-		if(typeof date == "string") date = new Date(date);
+		if(typeof date === "string") date = new Date(date);
 
 		return `${(date.getMonth()+1) < 10 ? "0"+(date.getMonth()+1) : (date.getMonth()+1)}.${(date.getDate()) < 10 ? "0"+(date.getDate()) : (date.getDate())}.${date.getFullYear()} at ${date.getHours() < 10 ? "0"+date.getHours() : date.getHours()}:${date.getMinutes() < 10 ? "0"+date.getMinutes() : date.getMinutes()}`
 	}
 
 	selectProxy = async (proxy, index, lastindex) => {
 		if(proxy.name) {
-			if(proxy.name == "Add new") {
-				await this.setState(state => {
+			if(proxy.name === "Add new") {
+				this.setState(state => {
 					if(!state.edit.proxylist[lastindex].val.prefix &&
 						!state.edit.proxylist[lastindex].val.suffix) {
 						state.edit.proxylist.splice(lastindex, 1);
@@ -84,7 +84,7 @@ class MemberCard extends Component {
 					return state;
 				})
 			} else {
-				await this.setState((state) => {
+				this.setState((state) => {
 					if(!state.edit.proxylist[lastindex].val.prefix &&
 						!state.edit.proxylist[lastindex].val.suffix &&
 						state.edit.proxylist.length > 1) {
@@ -110,14 +110,14 @@ class MemberCard extends Component {
 		var key = this.state.edit.proxy_index;
 		console.log(key);
 		var proxy = this.state.edit.proxylist[key].val;
-		if(name == "prefix") {
+		if(name === "prefix") {
 			this.setState((state) => {
 				state.edit.proxylist[key].name = (!val && !proxy.suffix ? "(empty)" : `${val || ""}text${proxy.suffix || ""}`);
 				state.edit.proxylist[key].val = {prefix: val, suffix: proxy.suffix || ""}
 				state.edit.proxy = state.edit.proxylist[key].val;
 				return state;
 			});
-		} else if(name == "suffix") {
+		} else if(name === "suffix") {
 			this.setState((state) => {
 				state.edit.proxylist[key].name = (!proxy.prefix && !val ? "(empty)" : `${proxy.prefix || ""}text${val || ""}`);
 				state.edit.proxylist[key].val = {prefix: proxy.prefix || "", suffix: val || ""}
@@ -161,10 +161,10 @@ class MemberCard extends Component {
 		this.setState((state) => {
 			if(["prefix","suffix"].includes(n)) {
 				this.editProxy(target);
-			} else if(n == "visibility" || n.includes('privacy')) {
-				state.edit.member[n] = val == true ? "private" : "public";
+			} else if(n === "visibility" || n.includes('privacy')) {
+				state.edit.member[n] = val === true ? "private" : "public";
 			} else {
-				state.edit.member[n] = val != "" ? val : null;
+				state.edit.member[n] = val !== "" ? val : null;
 			}
 			
 			return state;
@@ -176,9 +176,9 @@ class MemberCard extends Component {
 		var st = Object.assign({}, this.state.edit.member);
 		st.proxy_tags = this.state.edit.proxylist.map(p => p.val);
 
-		if(((st.proxy_tags[0].prefix == "" && st.proxy_tags[0].suffix == "") ||
-			(st.proxy_tags[0].prefix == null && st.proxy_tags[0].suffix == null)) &&
-			st.proxy_tags.length == 1) st.proxy_tags = [];
+		if(((st.proxy_tags[0].prefix === "" && st.proxy_tags[0].suffix === "") ||
+			(st.proxy_tags[0].prefix === null && st.proxy_tags[0].suffix === null)) &&
+			st.proxy_tags.length === 1) st.proxy_tags = [];
 
 		delete st.prefix;
 		delete st.suffix;
@@ -195,13 +195,14 @@ class MemberCard extends Component {
 
 		st.proxy_tags.forEach((tag,i) => {
 			if(!tag.prefix && !tag.suffix) st.proxy_tags.splice(i, 1);
-			if(tag.prefix == null) tag.prefix = "";
-			if(tag.suffix == null) tag.suffix = "";
+			if(tag.prefix === null) tag.prefix = "";
+			if(tag.suffix === null) tag.suffix = "";
 		});
 
-		if(st.id != "new") {
+		let res;
+		if(st.id !== "new") {
 			try {
-				var res = await axios('/pkapi/m/'+st.id, {
+				res = await axios('/pkapi/m/'+st.id, {
 					method: "PATCH",
 					data: JSON.stringify(st),
 					headers: {
@@ -218,7 +219,7 @@ class MemberCard extends Component {
 			}
 
 			var newmember = res.data;
-			await this.setState((state)=> {
+			this.setState((state)=> {
 				state.submitted = true;
 				state.member = newmember;
 				if(state.member.description) {
@@ -238,7 +239,7 @@ class MemberCard extends Component {
 			await this.state.onEdit(this.state.member)
 		} else {
 			try {
-				var res = await axios('/pkapi/m', {
+				res = await axios('/pkapi/m', {
 					method: "POST",
 					data: JSON.stringify(st),
 					headers: {
@@ -255,7 +256,7 @@ class MemberCard extends Component {
 			}
 			
 			var member = res.data;
-			await this.setState({
+			this.setState({
 				member: {id: "new"},
 				edit: {enabled: false, member: null},
 				expanded: false,
@@ -266,7 +267,7 @@ class MemberCard extends Component {
 	}
 
 	deleteMember = () => {
-		if(this.state.delete == 0) {
+		if(this.state.delete === 0) {
 			this.setState({delete: 1})
 		} else this.state.deleteMember(this.state.member.id);
 	}
@@ -284,7 +285,7 @@ class MemberCard extends Component {
 	render() {
 		var memb = this.state.member;
 		var edit = this.state.edit;
-		if(memb && memb.id == "new" && !edit.enabled) {
+		if(memb && memb.id === "new" && !edit.enabled) {
 			return (
 				<div className={`App-memberCard ${this.state.editClass}`} style={{"cursor": (this.state.editable ? "pointer" : "default")}} onClick={()=> this.enableEdit()}>
 					<h1 style={{fontSize: 'calc(72px + 2vmin)', opacity: .5, margin: 'auto'}}>
@@ -319,47 +320,47 @@ class MemberCard extends Component {
 							<div id="privacy-panel">
 								<p>
 								<label for="visibility">Make member private?</label>{" "}
-								<input type="checkbox" name="visibility" checked={edit.member.visibility == "private" ? true : false} onChange={(e)=>this.handleChange("visibility",e)}/>
+								<input type="checkbox" name="visibility" checked={edit.member.visibility === "private" ? true : false} onChange={(e)=>this.handleChange("visibility",e)}/>
 								</p>
 
 								<p>
 								<label for="name_privacy">Make member name private?</label>{" "}
-								<input type="checkbox" name="name_privacy" checked={edit.member.name_privacy == "private" ? true : false} onChange={(e)=>this.handleChange("name_privacy",e)}/>
+								<input type="checkbox" name="name_privacy" checked={edit.member.name_privacy === "private" ? true : false} onChange={(e)=>this.handleChange("name_privacy",e)}/>
 								</p>
 
 								<p>
 								<label for="description_privacy">Make member description private?</label>{" "}
-								<input type="checkbox" name="description_privacy" checked={edit.member.description_privacy == "private" ? true : false} onChange={(e)=>this.handleChange("description_privacy",e)}/>
+								<input type="checkbox" name="description_privacy" checked={edit.member.description_privacy === "private" ? true : false} onChange={(e)=>this.handleChange("description_privacy",e)}/>
 								</p>
 
 								<p>
 								<label for="birthday_privacy">Make member birthday private?</label>{" "}
-								<input type="checkbox" name="birthday_privacy" checked={edit.member.birthday_privacy == "private" ? true : false} onChange={(e)=>this.handleChange("birthday_privacy",e)}/>
+								<input type="checkbox" name="birthday_privacy" checked={edit.member.birthday_privacy === "private" ? true : false} onChange={(e)=>this.handleChange("birthday_privacy",e)}/>
 								</p>
 
 								<p>
 								<label for="pronoun_privacy">Make member pronouns private?</label>{" "}
-								<input type="checkbox" name="pronoun_privacy" checked={edit.member.pronoun_privacy == "private" ? true : false} onChange={(e)=>this.handleChange("pronoun_privacy",e)}/>
+								<input type="checkbox" name="pronoun_privacy" checked={edit.member.pronoun_privacy === "private" ? true : false} onChange={(e)=>this.handleChange("pronoun_privacy",e)}/>
 								</p>
 
 								<p>
 								<label for="avatar_privacy">Make member avatar private?</label>{" "}
-								<input type="checkbox" name="avatar_privacy" checked={edit.member.avatar_privacy == "private" ? true : false} onChange={(e)=>this.handleChange("avatar_privacy",e)}/>
+								<input type="checkbox" name="avatar_privacy" checked={edit.member.avatar_privacy === "private" ? true : false} onChange={(e)=>this.handleChange("avatar_privacy",e)}/>
 								</p>
 
 								<p>
 								<label for="metadata_privacy">Make member metadata (message count, etc) private?</label>{" "}
-								<input type="checkbox" name="metadata_privacy" checked={edit.member.metadata_privacy == "private" ? true : false} onChange={(e)=>this.handleChange("metadata_privacy",e)}/>
+								<input type="checkbox" name="metadata_privacy" checked={edit.member.metadata_privacy === "private" ? true : false} onChange={(e)=>this.handleChange("metadata_privacy",e)}/>
 								</p>
 							</div>
 							</div>
-							{this.state.delete == 1 && <p className="App-error">Are you sure you want to delete this member?</p>}
+							{this.state.delete === 1 && <p className="App-error">Are you sure you want to delete this member?</p>}
 							{this.state.error && <p className="App-error">ERR: {this.state.error}</p>}
-							{this.state.delete == 0 ? (
+							{this.state.delete === 0 ? (
 								<div id="button-panel">
 									<button className="App-button" type="submit">Save</button>
 									<button className="App-button" type="button" onClick={this.cancelEdit}>Cancel</button>
-									{memb.id != "new" && <button className="App-button" type="button" onClick={()=>this.deleteMember()}>Delete</button>}
+									{memb.id !== "new" && <button className="App-button" type="button" onClick={()=>this.deleteMember()}>Delete</button>}
 									<button className="App-button" type="button" onClick={this.expand}>{this.state.expanded ? "Contract" : "Expand"}</button>
 								</div>
 							) : (

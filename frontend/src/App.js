@@ -1,14 +1,12 @@
 import React, { Component, Fragment as Frag } from 'react';
-import {BrowserRouter as Router, Route, Link, Redirect} from 'react-router-dom';
+import {BrowserRouter as Router, Route } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons'
 import './App.css';
 
-import System from './Components/System';
 import Profile from './Components/Profile';
 import Dashboard from './Components/Dashboard';
-import Login from './Components/Login';
 import Loading from './Components/Loading';
 
 class App extends Component {
@@ -93,7 +91,7 @@ class App extends Component {
 				</header>
 				{this.state.user ?
 					<Route exact path="/" render={(props)=> <Dashboard {...props} user={this.state.user} />} /> :
-					<Route exact path="/" render={(props)=> 
+					<Route exact path="/a" render={(props)=> 
 						<Frag>
 							<div className="App-login">
 							<p>Enter your token below. You can get this with "pk;token"</p>
